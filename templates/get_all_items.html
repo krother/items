@@ -1,0 +1,12 @@
+<table>
+    <thead>
+        <th>Owner</th>
+        <th>Summary</th>
+        <th>State</th>
+    </thead>
+    <tbody>
+        {% for item in data %}
+        <tr><td>{{ item.owner }}</td><td>{{ item.summary }}</td><td>{{ item.state }}</td></tr>
+        {% endfor %}
+    </tbody>
+</ul>

@@ -22,6 +22,7 @@ dependencies = [
     "rich",
     "fastapi",
     "uvicorn",
+    "jinja2",
 ]
 
 [project.optional-dependencies]
