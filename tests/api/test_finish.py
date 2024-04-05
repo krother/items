@@ -13,7 +13,7 @@ def test_finish(items_db, start_state):
     """
     End state should be "done"
     """
-    c = Item("Update pytest section", state=start_state)
+    c = Item(summary="Update pytest section", state=start_state)
     i = items_db.add_item(c)
     items_db.finish(i)
     c = items_db.get_item(i)

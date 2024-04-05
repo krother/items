@@ -13,7 +13,7 @@ def test_start(items_db, start_state):
     """
     End state should be "in progress"
     """
-    i = Item("Update pytest section", state=start_state)
+    i = Item(summary="Update pytest section", state=start_state)
     ai = items_db.add_item(i)
     items_db.start(ai)
     i = items_db.get_item(ai)

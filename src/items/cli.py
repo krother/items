@@ -25,7 +25,7 @@ def add(summary: List[str], owner: str = typer.Option(None, "-o", "--owner")):
     """Add an item to the db."""
     summary = " ".join(summary) if summary else None
     with items_db() as db:
-        db.add_item(items.Item(summary, owner, state="todo"))
+        db.add_item(items.Item(summary=summary, owner=owner, state="todo"))
 
 
 @app.command()
@@ -71,7 +71,7 @@ def update(
     summary = " ".join(summary) if summary else None
     with items_db() as db:
         try:
-            db.update_item(item_id, items.Item(summary, owner, state=None))
+            db.update_item(item_id, items.Item(summary=summary, owner=owner, state=None))
         except items.InvalidItemId:
             print(f"Error: Invalid item id {item_id}.")
 

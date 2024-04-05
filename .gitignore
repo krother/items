@@ -86,3 +86,4 @@ share
 pyvenv.cfg
 .venv
 pip-selfcheck.json
+.items_db.db

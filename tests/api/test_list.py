@@ -18,9 +18,9 @@ def test_list_several_items(items_db):
     Given a variety of items, make sure they get returned.
     """
     orig = [
-        Item("Update pytest section"),
-        Item("Update cibuildwheel section", owner="veit"),
-        Item("Update mock tests", owner="vsc", state="in progress"),
+        Item(summary="Update pytest section"),
+        Item(summary="Update cibuildwheel section", owner="veit"),
+        Item(summary="Update mock tests", owner="vsc", state="in progress"),
     ]
 
     for c in orig:

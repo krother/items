@@ -1,9 +1,8 @@
 """
 API for the items project
 """
-from dataclasses import asdict, dataclass, field
-
-from .db import DB
+from .model import Item
+from .sqldb import SQLDB
 
 __all__ = [
     "Item",
@@ -12,21 +11,6 @@ __all__ = [
     "MissingSummary",
     "InvalidItemId",
 ]
-
-
-@dataclass
-class Item:
-    summary: str = None
-    owner: str = None
-    state: str = "todo"
-    id: int = field(default=None, compare=False)
-
-    @classmethod
-    def from_dict(cls, d):
-        return Item(**d)
-
-    def to_dict(self):
-        return asdict(self)
 
 
 class ItemsException(Exception):
@@ -44,7 +28,7 @@ class InvalidItemId(ItemsException):
 class ItemsDB:
     def __init__(self, db_path):
         self._db_path = db_path
-        self._db = DB(db_path, ".items_db")
+        self._db = SQLDB(".items_db")
 
     def add_item(self, item: Item):
         """Add an item, return the id of the item."""
@@ -52,15 +36,17 @@ class ItemsDB:
             raise MissingSummary
         if item.owner is None:
             item.owner = ""
-        item_id = self._db.create(item.to_dict())
-        self._db.update(item_id, {"id": item_id})
+        item = Item(summary=item.summary,
+                    owner=item.owner,
+                    state=item.state)  # enable adding same item twice
+        item_id = self._db.create(item)
         return item_id
 
     def get_item(self, item_id: int):
         """Return an item with a corresponding id."""
-        db_item = self._db.read(item_id)
-        if db_item is not None:
-            return Item.from_dict(db_item)
+        item = self._db.read(item_id)
+        if item is not None:
+            return item
         else:
             raise InvalidItemId(item_id)
 
@@ -69,16 +55,16 @@ class ItemsDB:
         all_items = self._db.read_all()
         if (owner is not None) and (state is not None):
             return [
-                Item.from_dict(t)
-                for t in all_items
-                if (t["owner"] == owner and t["state"] == state)
+                item
+                for item in all_items
+                if (item.owner == owner and item.state == state)
             ]
         elif owner is not None:
-            return [Item.from_dict(t) for t in all_items if t["owner"] == owner]
+            return [item for item in all_items if item.owner == owner]
         elif state is not None:
-            return [Item.from_dict(t) for t in all_items if t["state"] == state]
+            return [item for item in all_items if item.state == state]
         else:
-            return [Item.from_dict(t) for t in all_items]
+            return [item for item in all_items]
 
     def count(self):
         """Return the number of items in the db."""
@@ -86,10 +72,14 @@ class ItemsDB:
 
     def update_item(self, item_id: int, item_mods: Item):
         """Update an item with modifications."""
-        try:
-            self._db.update(item_id, item_mods.to_dict())
-        except KeyError as exc:
-            raise InvalidItemId(item_id) from exc
+        mods = {
+            k:v
+            for k, v in item_mods.model_dump().items()
+            if v is not None
+            }
+        rowcount = self._db.update(item_id, mods)
+        if rowcount == 0:
+            raise InvalidItemId(item_id)
 
     def start(self, item_id: int):
         """Set an item state to in progress."""
@@ -101,17 +91,16 @@ class ItemsDB:
 
     def delete_item(self, item_id: int):
         """Remove an item from db with a given item id."""
-        try:
-            self._db.delete(item_id)
-        except KeyError as exc:
-            raise InvalidItemId(item_id) from exc
+        rowcount = self._db.delete(item_id)
+        if rowcount == 0:
+            raise InvalidItemId(item_id)
 
     def delete_all(self):
         """Remove all items from the db."""
         self._db.delete_all()
 
     def close(self):
-        self._db.close()
+        pass
 
     def path(self):
         return self._db_path

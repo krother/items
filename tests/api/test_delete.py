@@ -11,9 +11,9 @@ from items import InvalidItemId, Item
 
 @pytest.fixture()
 def three_items(items_db):
-    item1 = items_db.add_item(Item("Update pytest section"))
-    item2 = items_db.add_item(Item("Update cibuildwheel section"))
-    item3 = items_db.add_item(Item("Update mock tests"))
+    item1 = items_db.add_item(Item(summary="Update pytest section"))
+    item2 = items_db.add_item(Item(summary="Update cibuildwheel section"))
+    item3 = items_db.add_item(Item(summary="Update mock tests"))
     return (item1, item2, item3)
 
 
@@ -44,7 +44,7 @@ def test_delete_last_item(items_db):
     Count should be back to 0
     And item shouldn't be retrievable.
     """
-    i = items_db.add_item(Item("Update pytest section"))
+    i = items_db.add_item(Item(summary="Update pytest section"))
     items_db.delete_item(i)
     assert items_db.count() == 0
     with pytest.raises(InvalidItemId):

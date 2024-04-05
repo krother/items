@@ -10,14 +10,14 @@ expected_output = """\
 
 
 def test_list(items_db, items_cli):
-    items_db.add_item(items.Item("Update pytest section"))
-    items_db.add_item(items.Item("Update cibuildwheel section"))
+    items_db.add_item(items.Item(summary="Update pytest section"))
+    items_db.add_item(items.Item(summary="Update cibuildwheel section"))
     output = items_cli("list")
     assert output.strip() == expected_output.strip()
 
 
 def test_main(items_db, items_cli):
-    items_db.add_item(items.Item("Update pytest section"))
-    items_db.add_item(items.Item("Update cibuildwheel section"))
+    items_db.add_item(items.Item(summary="Update pytest section"))
+    items_db.add_item(items.Item(summary="Update cibuildwheel section"))
     output = items_cli("")
     assert output.strip() == expected_output.strip()
