@@ -120,17 +120,18 @@ def get_template_render_route_class(template_dir: str) -> type:
 app.router.route_class = get_template_render_route_class("templates")
 
 
+
 @app.get("/items")
 def get_all_items() -> list[Item]:
     """Return a list of all items."""
     with items_db() as db:
         return db.list_items()
 
-
-
-#@app.post("/books")
-#def get_message(book: BookRequest) -> BookResponse:
-#    return BookResponse(full_title=f"{book.title} ({book.subtitle})")
+@app.post("/add_item")
+def add_item(item: Item):
+    with items_db() as db:
+        db.add_item(item)
+    return Response(headers={"HX-Refresh": "true"})
 
 
 # Also let FastAPI serve the HTMX "frontend" of our application.

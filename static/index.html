@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<script src="htmx.min.js"></script>
+		<script src="json-enc.js"></script>
 	<body>
 		<h1>Items</h1>
 
@@ -15,6 +16,24 @@
 		</div>
 
 		<div id="item-result"></div>
+
+		<h3>Add New Item</h3>
+		<form
+		id="add-item"
+		hx-post="/add_item"
+		hx-ext="json-enc"
+		>
+		  <table>
+			  <tr>
+				  <td><input id="summary" name='summary' value=''><br/></td>
+				  <td><input id="owner" name='owner' value=''><br/></td>
+				  <td><input id="state" name='state' value='todo'><br/></td>
+				  <td><button type="submit" class="btn">
+				  Add Item
+				  </button></td>
+			  </tr>
+		  </table>
+	   </form>
 
 	</body>
 </html>
