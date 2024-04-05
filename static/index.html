@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<script src="htmx.min.js"></script>
+		<script src="nunjucks.min.js"></script>
+		<script src="client-side-templates.js"></script>
+		<script src="json-enc.js"></script>
+	<body>
+		<h1>Items</h1>
+
+		<h3>All Items</h3>
+
+        <div
+			hx-get="/items"
+			hx-trigger="load"
+            hx-ext="client-side-templates"
+            hx-target="#item-result"
+            nunjucks-array-template="item-summary"
+            >
+		</div>
+
+		<div id="item-result"></div>
+
+        <template id="item-summary">
+            <ul>
+                {% for item in data %}
+                <li><b>{{ item.owner }}:</b><br>{{ item.summary }} ({{ item.state }})</li>
+                {% endfor %}
+            </ul>
+		</template>
+
+	</body>
+</html>
