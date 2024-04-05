@@ -6,7 +6,8 @@ from items import Item
 @pytest.fixture(scope="session")
 def db_path(tmp_path_factory):
     """Path to temporary database"""
-    return tmp_path_factory.mktemp("items_db")
+    test_path = tmp_path_factory.mktemp("items_db")
+    return test_path
 
 
 @pytest.fixture(scope="session")
@@ -15,6 +16,11 @@ def session_items_db(db_path):
     db_ = items.ItemsDB(db_path)
     yield db_
     db_.close()
+
+
+#@pytest.fixture(autouse=True)
+#def mock_environment_vars(monkeypatch, db_path):
+#    monkeypatch.setenv("ITEMS_DB_DIR", db_path) #.as_posix())
 
 
 @pytest.fixture(scope="function")

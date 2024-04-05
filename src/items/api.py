@@ -1,8 +1,11 @@
 """
 API for the items project
 """
+import os
+
 from .model import Item
 from .sqldb import SQLDB
+
 
 __all__ = [
     "Item",
@@ -28,7 +31,7 @@ class InvalidItemId(ItemsException):
 class ItemsDB:
     def __init__(self, db_path):
         self._db_path = db_path
-        self._db = SQLDB(".items_db")
+        self._db = SQLDB(os.path.join(db_path, ".items_db"))
 
     def add_item(self, item: Item):
         """Add an item, return the id of the item."""

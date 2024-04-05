@@ -1,7 +1,4 @@
 """Command Line Interface (CLI) for the items project."""
-import os
-import pathlib
-from contextlib import contextmanager
 from io import StringIO
 from typing import List
 
@@ -10,6 +7,8 @@ import typer
 from rich.table import Table
 
 import items
+from items.utils import items_db
+
 
 app = typer.Typer(add_completion=False)
 
@@ -117,20 +116,3 @@ def main(ctx: typer.Context):
     """
     if ctx.invoked_subcommand is None:
         list_items(owner=None, state=None)
-
-
-def get_path():
-    db_path_env = os.getenv("ITEMS_DB_DIR", "")
-    if db_path_env:
-        db_path = pathlib.Path(db_path_env)
-    else:
-        db_path = pathlib.Path.home() / "items_db"
-    return db_path
-
-
-@contextmanager
-def items_db():
-    db_path = get_path()
-    db = items.ItemsDB(db_path)
-    yield db
-    db.close()

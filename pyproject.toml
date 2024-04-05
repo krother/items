@@ -20,6 +20,8 @@ dependencies = [
     "sqlmodel",
     "typer",
     "rich",
+    "fastapi",
+    "uvicorn",
 ]
 
 [project.optional-dependencies]
@@ -28,6 +30,7 @@ tests = [
     "pytest>=6.0",
     "pytest-cov",
     "faker",
+    "httpx",
 ]
 docs = [
     "furo",
